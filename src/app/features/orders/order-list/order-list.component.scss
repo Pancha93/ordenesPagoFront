@@ -1,0 +1,368 @@
+.order-list-container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+
+  h2 {
+    margin: 0;
+    color: #2c3e50;
+    font-size: 28px;
+  }
+
+  .btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &.btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+      }
+    }
+  }
+}
+
+.filters-card, .orders-card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 24px;
+
+  h3 {
+    margin: 0 0 16px 0;
+    color: #2c3e50;
+    font-size: 18px;
+  }
+}
+
+.filters-form {
+  display: flex;
+  gap: 16px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+
+  .form-group {
+    flex: 1;
+    min-width: 200px;
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: #555;
+      font-size: 14px;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 10px 12px;
+      border: 2px solid #ddd;
+      border-radius: 6px;
+      font-size: 14px;
+      transition: border-color 0.2s;
+
+      &:focus {
+        outline: none;
+        border-color: #667eea;
+      }
+    }
+  }
+
+  .filter-actions {
+    display: flex;
+    gap: 8px;
+
+    .btn {
+      padding: 10px 16px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.2s;
+
+      &.btn-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+      }
+
+      &.btn-secondary {
+        background: #95a5a6;
+        color: white;
+
+        &:hover {
+          background: #7f8c8d;
+        }
+      }
+    }
+  }
+}
+
+.alert {
+  padding: 14px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+
+  &.alert-error {
+    background: #fee;
+    border: 1px solid #fcc;
+    color: #c33;
+  }
+}
+
+.loading {
+  text-align: center;
+  padding: 40px;
+
+  .spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #667eea;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 16px;
+  }
+
+  p {
+    color: #666;
+    font-size: 16px;
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.orders-info {
+  margin-bottom: 16px;
+  color: #666;
+
+  strong {
+    color: #2c3e50;
+  }
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+.orders-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+
+  thead {
+    background: #f8f9fa;
+
+    th {
+      padding: 14px 12px;
+      text-align: left;
+      font-weight: 600;
+      color: #2c3e50;
+      border-bottom: 2px solid #e1e4e8;
+      white-space: nowrap;
+
+      &.sortable {
+        cursor: pointer;
+        user-select: none;
+
+        &:hover {
+          background: #e9ecef;
+        }
+      }
+
+      .sort-icon {
+        margin-left: 4px;
+        font-size: 12px;
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      border-bottom: 1px solid #e1e4e8;
+      transition: background 0.2s;
+
+      &:hover {
+        background: #f8f9fa;
+      }
+
+      td {
+        padding: 14px 12px;
+
+        &.description-cell {
+          max-width: 300px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        &.amount-cell {
+          font-weight: 600;
+          color: #27ae60;
+        }
+
+        &.text-center {
+          text-align: center;
+        }
+      }
+    }
+  }
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+
+  &.status-pending {
+    background: #fff3cd;
+    color: #856404;
+  }
+
+  &.status-approved {
+    background: #d4edda;
+    color: #155724;
+  }
+
+  &.status-rejected {
+    background: #f8d7da;
+    color: #721c24;
+  }
+}
+
+.invoice-badge {
+  font-size: 13px;
+  color: #c33;
+
+  &.has-invoice {
+    color: #27ae60;
+    font-weight: 600;
+  }
+}
+
+.user-cell {
+  .user-name {
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 2px;
+  }
+
+  .user-email {
+    font-size: 12px;
+    color: #7f8c8d;
+  }
+}
+
+.btn-sm {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &.btn-info {
+    background: #3498db;
+    color: white;
+
+    &:hover {
+      background: #2980b9;
+      transform: translateY(-1px);
+    }
+  }
+}
+
+.no-orders {
+  text-align: center;
+  padding: 60px 20px;
+  color: #7f8c8d;
+  font-size: 18px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+
+  .btn-page {
+    padding: 8px 14px;
+    border: 1px solid #ddd;
+    background: white;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s;
+
+    &:hover:not(:disabled) {
+      background: #f8f9fa;
+      border-color: #667eea;
+    }
+
+    &.active {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-color: #667eea;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .filters-form {
+    flex-direction: column;
+
+    .form-group {
+      width: 100%;
+    }
+
+    .filter-actions {
+      width: 100%;
+
+      .btn {
+        flex: 1;
+      }
+    }
+  }
+
+  .table-responsive {
+    font-size: 12px;
+  }
+}

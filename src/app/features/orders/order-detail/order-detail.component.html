@@ -1,0 +1,236 @@
+<div class="order-detail-container">
+  <!-- Header -->
+  <div class="page-header">
+    <button class="btn-back" (click)="goBack()">
+      ← Volver a la lista
+    </button>
+    <h2>Detalle de Orden #{{ orderId }}</h2>
+  </div>
+
+  <!-- Loading -->
+  <div class="loading" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Cargando orden...</p>
+  </div>
+
+  <!-- Contenido principal -->
+  <div class="content-grid" *ngIf="!loading && order">
+    <!-- Información de la orden -->
+    <div class="card order-info-card">
+      <div class="card-header">
+        <h3>📋 Información de la Orden</h3>
+        <span class="status-badge" [ngClass]="getStatusClass(order.status)">
+          {{ getStatusText(order.status) }}
+        </span>
+      </div>
+      
+      <div class="card-body">
+        <div class="info-row">
+          <span class="label">ID:</span>
+          <span class="value">{{ order.id }}</span>
+        </div>
+        
+        <div class="info-row">
+          <span class="label">Descripción:</span>
+          <span class="value">{{ order.description }}</span>
+        </div>
+        
+        <div class="info-row">
+          <span class="label">Monto:</span>
+          <span class="value amount">{{ formatAmount(order.amount) }}</span>
+        </div>
+        
+        <div class="info-row">
+          <span class="label">Creado por:</span>
+          <span class="value">
+            <strong>{{ order.createdByName }}</strong><br>
+            <small>{{ order.createdByEmail }}</small>
+          </span>
+        </div>
+        
+        <div class="info-row">
+          <span class="label">Fecha de creación:</span>
+          <span class="value">{{ formatDate(order.createdAt) }}</span>
+        </div>
+        
+        <div class="info-row">
+          <span class="label">Última actualización:</span>
+          <span class="value">{{ formatDate(order.updatedAt) }}</span>
+        </div>
+        
+        <!-- Información de aprobación -->
+        <div *ngIf="order.status === OrderStatus.APPROVED && order.approvedByEmail" class="approval-info">
+          <div class="info-row">
+            <span class="label">Aprobado por:</span>
+            <span class="value">
+              <strong>{{ order.approvedByName }}</strong><br>
+              <small>{{ order.approvedByEmail }}</small>
+            </span>
+          </div>
+          <div class="info-row">
+            <span class="label">Fecha de aprobación:</span>
+            <span class="value">{{ formatDate(order.approvedAt!) }}</span>
+          </div>
+        </div>
+        
+        <!-- Información de rechazo -->
+        <div *ngIf="order.status === OrderStatus.REJECTED && order.rejectedByEmail" class="rejection-info">
+          <div class="info-row">
+            <span class="label">Rechazado por:</span>
+            <span class="value">
+              <strong>{{ order.rejectedByName }}</strong><br>
+              <small>{{ order.rejectedByEmail }}</small>
+            </span>
+          </div>
+          <div class="info-row">
+            <span class="label">Fecha de rechazo:</span>
+            <span class="value">{{ formatDate(order.rejectedAt!) }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Motivo de rechazo:</span>
+            <span class="value rejection-reason">{{ order.rejectionReason }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Acciones para ADMIN -->
+      <div class="card-footer" *ngIf="canApproveOrReject()">
+        <h4>Acciones de Administrador</h4>
+        <div class="admin-actions">
+          <button 
+            class="btn btn-success" 
+            (click)="approveOrder()" 
+            [disabled]="approvingOrder"
+          >
+            <span *ngIf="!approvingOrder">✓ Aprobar Orden</span>
+            <span *ngIf="approvingOrder">Aprobando...</span>
+          </button>
+          <button 
+            class="btn btn-danger" 
+            (click)="openRejectModal()"
+            [disabled]="rejectingOrder"
+          >
+            ✗ Rechazar Orden
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Factura -->
+    <div class="card invoice-card">
+      <div class="card-header">
+        <h3>📄 Factura</h3>
+      </div>
+      
+      <div class="card-body">
+        <!-- Factura existente -->
+        <div *ngIf="invoice" class="invoice-info">
+          <div class="invoice-icon">📑</div>
+          <div class="invoice-details">
+            <p class="invoice-filename">{{ invoice.fileName }}</p>
+            <p class="invoice-meta">
+              Tipo: {{ invoice.contentType }}<br>
+              Tamaño: {{ formatFileSize(invoice.fileSize) }}<br>
+              Subido: {{ formatDate(invoice.uploadedAt) }}
+            </p>
+            <button class="btn btn-primary btn-block" (click)="viewInvoice()">
+              👁 Ver Factura
+            </button>
+          </div>
+        </div>
+
+        <!-- No hay factura pero se puede subir -->
+        <div *ngIf="!invoice && !loadingInvoice && canUploadInvoice()" class="upload-section">
+          <p class="upload-instructions">
+            📤 No hay factura adjunta. Puede subir un archivo PDF o imagen (JPG, PNG).
+          </p>
+          
+          <div class="file-input-wrapper">
+            <input 
+              type="file" 
+              id="invoiceFile" 
+              accept=".pdf,.jpg,.jpeg,.png"
+              (change)="onFileSelected($event)"
+              #fileInput
+            />
+            <label for="invoiceFile" class="file-input-label">
+              <span *ngIf="!selectedFile">Seleccionar archivo</span>
+              <span *ngIf="selectedFile">{{ selectedFile.name }}</span>
+            </label>
+          </div>
+
+          <p class="upload-hint">Tamaño máximo: 5MB</p>
+          
+          <div class="alert alert-error" *ngIf="uploadError">
+            {{ uploadError }}
+          </div>
+          
+          <button 
+            class="btn btn-primary btn-block" 
+            [disabled]="!selectedFile || uploadingInvoice"
+            (click)="uploadInvoice()"
+          >
+            <span *ngIf="!uploadingInvoice">⬆ Subir Factura</span>
+            <span *ngIf="uploadingInvoice">Subiendo...</span>
+          </button>
+        </div>
+
+        <!-- No hay factura y no se puede subir -->
+        <div *ngIf="!invoice && !loadingInvoice && !canUploadInvoice()" class="no-invoice">
+          <p>📭 No hay factura adjunta para esta orden.</p>
+          <p *ngIf="order.status !== OrderStatus.PENDING" class="note">
+            No se pueden subir facturas para órdenes {{ getStatusText(order.status).toLowerCase() }}s.
+          </p>
+        </div>
+
+        <!-- Loading factura -->
+        <div *ngIf="loadingInvoice" class="loading-invoice">
+          <div class="spinner-small"></div>
+          <p>Cargando factura...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para rechazar orden -->
+<div class="modal-overlay" *ngIf="showRejectModal" (click)="closeRejectModal()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Rechazar Orden</h3>
+      <button class="modal-close" (click)="closeRejectModal()">✕</button>
+    </div>
+    
+    <form [formGroup]="rejectForm" (ngSubmit)="rejectOrder()">
+      <div class="modal-body">
+        <p>Por favor, indique el motivo del rechazo:</p>
+        
+        <textarea
+          formControlName="rejectionReason"
+          placeholder="Escriba el motivo del rechazo (mínimo 10 caracteres)"
+          rows="5"
+          [class.error]="rejectForm.get('rejectionReason')?.invalid && rejectForm.get('rejectionReason')?.touched"
+        ></textarea>
+        
+        <span class="error-message" 
+          *ngIf="rejectForm.get('rejectionReason')?.hasError('required') && rejectForm.get('rejectionReason')?.touched">
+          El motivo del rechazo es obligatorio
+        </span>
+        <span class="error-message"
+          *ngIf="rejectForm.get('rejectionReason')?.hasError('minlength') && rejectForm.get('rejectionReason')?.touched">
+          El motivo debe tener al menos 10 caracteres
+        </span>
+      </div>
+      
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeRejectModal()" [disabled]="rejectingOrder">
+          Cancelar
+        </button>
+        <button type="submit" class="btn btn-danger" [disabled]="rejectForm.invalid || rejectingOrder">
+          <span *ngIf="!rejectingOrder">Rechazar Orden</span>
+          <span *ngIf="rejectingOrder">Rechazando...</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

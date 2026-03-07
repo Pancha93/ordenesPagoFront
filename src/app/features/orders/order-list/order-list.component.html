@@ -1,0 +1,167 @@
+<div class="order-list-container">
+  <div class="page-header">
+    <h2>Órdenes de Pago</h2>
+    <button 
+      *ngIf="authService.isOperator()" 
+      class="btn btn-primary" 
+      routerLink="/dashboard/orders/create"
+    >
+      ➕ Nueva Orden
+    </button>
+  </div>
+
+  <!-- Filtros -->
+  <div class="filters-card">
+    <h3>Filtros</h3>
+    <div class="filters-form">
+      <div class="form-group">
+        <label for="statusFilter">Estado</label>
+        <select id="statusFilter" [(ngModel)]="statusFilter" class="form-control">
+          <option value="">Todos</option>
+          <option [value]="OrderStatus.PENDING">Pendiente</option>
+          <option [value]="OrderStatus.APPROVED">Aprobada</option>
+          <option [value]="OrderStatus.REJECTED">Rechazada</option>
+        </select>
+      </div>
+
+      <div class="filter-actions">
+        <button class="btn btn-primary" (click)="applyFilters()">🔍 Buscar</button>
+        <button class="btn btn-secondary" (click)="clearFilters()">✖ Limpiar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mensaje de error -->
+  <div class="alert alert-error" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Loading -->
+  <div class="loading" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Cargando órdenes...</p>
+  </div>
+
+  <!-- Tabla de órdenes -->
+  <div class="orders-card" *ngIf="!loading">
+    <div class="orders-info">
+      <p>Total de órdenes: <strong>{{ totalElements }}</strong></p>
+    </div>
+
+    <div class="table-responsive" *ngIf="orders.length > 0">
+      <table class="orders-table">
+        <thead>
+          <tr>
+            <th (click)="changeSort('id')" class="sortable">
+              ID
+              <span class="sort-icon" *ngIf="sortBy === 'id'">
+                {{ sortDirection === 'ASC' ? '↑' : '↓' }}
+              </span>
+            </th>
+            <th>Descripción</th>
+            <th (click)="changeSort('amount')" class="sortable">
+              Monto
+              <span class="sort-icon" *ngIf="sortBy === 'amount'">
+                {{ sortDirection === 'ASC' ? '↑' : '↓' }}
+              </span>
+            </th>
+            <th (click)="changeSort('status')" class="sortable" >
+              Estado
+              <span class="sort-icon" *ngIf="sortBy === 'status'">
+                {{ sortDirection === 'ASC' ? '↑' : '↓' }}
+              </span>
+            </th>
+            <th>Creado por</th>
+            <th>Factura</th>
+            <th (click)="changeSort('createdAt')" class="sortable">
+              Fecha de Creación
+              <span class="sort-icon" *ngIf="sortBy === 'createdAt'">
+                {{ sortDirection === 'ASC' ? '↑' : '↓' }}
+              </span>
+            </th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let order of orders">
+            <td>{{ order.id }}</td>
+            <td class="description-cell">{{ order.description }}</td>
+            <td class="amount-cell">{{ formatAmount(order.amount) }}</td>
+            <td>
+              <span class="status-badge" [ngClass]="getStatusClass(order.status)">
+                {{ getStatusText(order.status) }}
+              </span>
+            </td>
+            <td>
+              <div class="user-cell">
+                <div class="user-name">{{ order.createdByName }}</div>
+                <div class="user-email">{{ order.createdByEmail }}</div>
+              </div>
+            </td>
+            <td class="text-center">
+              <span class="invoice-badge" [class.has-invoice]="order.hasInvoice">
+                {{ order.hasInvoice ? '✓ Sí' : '✗ No' }}
+              </span>
+            </td>
+            <td>{{ formatDate(order.createdAt) }}</td>
+            <td>
+              <button 
+                class="btn btn-sm btn-info" 
+                [routerLink]="['/dashboard/orders', order.id]"
+              >
+                👁 Ver
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- No hay órdenes -->
+    <div class="no-orders" *ngIf="orders.length === 0">
+      <p>📭 No se encontraron órdenes</p>
+    </div>
+
+    <!-- Paginación -->
+    <div class="pagination" *ngIf="totalPages > 1">
+      <button 
+        class="btn btn-page" 
+        [disabled]="currentPage === 0" 
+        (click)="goToPage(0)"
+      >
+        ⏮ Primera
+      </button>
+      <button 
+        class="btn btn-page" 
+        [disabled]="currentPage === 0" 
+        (click)="goToPage(currentPage - 1)"
+      >
+        ← Anterior
+      </button>
+      
+      <button 
+        *ngFor="let page of pages" 
+        class="btn btn-page"
+        [class.active]="page === currentPage"
+        (click)="goToPage(page)"
+      >
+        {{ page + 1 }}
+      </button>
+      
+      <button 
+        class="btn btn-page" 
+        [disabled]="currentPage === totalPages - 1" 
+        (click)="goToPage(currentPage + 1)"
+      >
+        Siguiente →
+      </button>
+      <button 
+        class="btn btn-page" 
+        [disabled]="currentPage === totalPages - 1" 
+        (click)="goToPage(totalPages - 1)"
+      >
+        Última ⏭
+      </button>
+    </div>
+  </div>
+</div>

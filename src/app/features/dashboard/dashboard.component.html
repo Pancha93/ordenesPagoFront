@@ -1,0 +1,48 @@
+<div class="dashboard-container" [class.menu-closed]="!menuOpen">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <h2>🅾️ Órdenes de Pago</h2>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a
+        *ngFor="let item of filteredMenuItems"
+        [routerLink]="item.route"
+        routerLinkActive="active"
+        class="nav-item"
+      >
+        <span class="nav-icon">{{ item.icon }}</span>
+        <span class="nav-label">{{ item.label }}</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-info" *ngIf="currentUser">
+        <div class="user-avatar">{{ currentUser.fullName.charAt(0).toUpperCase() }}</div>
+        <div class="user-details">
+          <div class="user-name">{{ currentUser.fullName }}</div>
+          <div class="user-email">{{ currentUser.email }}</div>
+          <span class="role-badge" [ngClass]="getRoleBadgeClass()">{{ getRoleText() }}</span>
+        </div>
+      </div>
+      <button class="btn-logout" (click)="logout()">
+        <span>🚪</span> Cerrar Sesión
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <header class="topbar">
+      <button class="menu-toggle" (click)="toggleMenu()">
+        <span>☰</span>
+      </button>
+      <h1>Sistema de Gestión de Órdenes</h1>
+    </header>
+
+    <main class="content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>

@@ -1,0 +1,89 @@
+<div class="create-order-container">
+  <div class="page-header">
+    <button class="btn-back" (click)="cancel()">
+      ← Volver
+    </button>
+    <h2>Nueva Orden de Pago</h2>
+  </div>
+
+  <div class="order-form-card">
+    <form [formGroup]="orderForm" (ngSubmit)="onSubmit()">
+      <!-- Campo Descripción -->
+      <div class="form-group">
+        <label for="description">
+          Descripción <span class="required">*</span>
+        </label>
+        <textarea
+          id="description"
+          formControlName="description"
+          placeholder="Ingrese una descripción detallada de la orden"
+          rows="4"
+          [class.error]="hasError('description')"
+        ></textarea>
+        <div class="field-info">
+          <span class="error-message" *ngIf="hasError('description')">
+            {{ getErrorMessage('description') }}
+          </span>
+          <span class="char-count">
+            {{ orderForm.get('description')?.value?.length || 0 }} / 500
+          </span>
+        </div>
+      </div>
+
+      <!-- Campo Monto -->
+      <div class="form-group">
+        <label for="amount">
+          Monto (COP) <span class="required">*</span>
+        </label>
+        <div class="input-with-icon">
+          <span class="currency-symbol">$</span>
+          <input
+            type="number"
+            id="amount"
+            formControlName="amount"
+            placeholder="0.00"
+            step="0.01"
+            min="0.01"
+            [class.error]="hasError('amount')"
+            (blur)="formatAmount()"
+          />
+        </div>
+        <span class="error-message" *ngIf="hasError('amount')">
+          {{ getErrorMessage('amount') }}
+        </span>
+        <p class="field-hint">Ingrese el monto en pesos colombianos (COP)</p>
+      </div>
+
+      <!-- Nota informativa -->
+      <div class="info-box">
+        <p>
+          <strong>📌 Nota:</strong> Una vez creada la orden, podrá adjuntar la factura correspondiente
+          en la pantalla de detalle.
+        </p>
+      </div>
+
+      <!-- Botones -->
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" (click)="cancel()" [disabled]="loading">
+          Cancelar
+        </button>
+        <button type="submit" class="btn btn-primary" [disabled]="loading || orderForm.invalid">
+          <span *ngIf="!loading">✓ Crear Orden</span>
+          <span *ngIf="loading">Creando...</span>
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Información adicional -->
+  <div class="help-card">
+    <h3>💡 Información</h3>
+    <ul>
+      <li>La descripción debe ser clara y detallada (mínimo 5 caracteres)</li>
+      <li>El monto debe ser un valor positivo mayor a 0</li>
+      <li>La orden se creará en estado "Pendiente"</li>
+      <li>Podrá adjuntar la factura después de crear la orden</li>
+      <li>Solo los administradores pueden aprobar o rechazar órdenes</li>
+    </ul>
+  </div>
+</div>
