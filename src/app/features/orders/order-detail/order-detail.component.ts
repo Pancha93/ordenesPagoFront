@@ -170,11 +170,20 @@ export class OrderDetailComponent implements OnInit {
   }
 
   /**
-   * Descarga o visualiza la factura
+   * Visualiza la factura en una nueva pestaña
    */
   viewInvoice(): void {
     if (this.invoice) {
-      this.invoiceService.downloadInvoice(this.invoice.fileUrl);
+      this.invoiceService.viewInvoice(this.invoice.downloadUrl);
+    }
+  }
+
+  /**
+   * Descarga la factura (forzar descarga)
+   */
+  downloadInvoice(): void {
+    if (this.invoice) {
+      this.invoiceService.downloadInvoice(this.invoice.downloadUrl);
     }
   }
 

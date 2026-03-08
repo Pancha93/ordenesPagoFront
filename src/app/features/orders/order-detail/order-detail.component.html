@@ -133,15 +133,20 @@
           <!-- Existing Invoice -->
           <div *ngIf="invoice" class="text-center">
             <div class="display-1 mb-3">📑</div>
-            <h6 class="mb-2">{{ invoice.fileName }}</h6>
+            <h6 class="mb-2">{{ invoice.originalFileName }}</h6>
             <div class="text-muted small mb-3">
               <div>Tipo: {{ invoice.contentType }}</div>
-              <div>Tamaño: {{ formatFileSize(invoice.fileSize) }}</div>
+              <div>Tamaño: {{ formatFileSize(invoice.fileSizeBytes) }}</div>
               <div>Subido: {{ formatDate(invoice.uploadedAt) }}</div>
             </div>
-            <button class="btn btn-primary w-100" (click)="viewInvoice()">
-              👁 Ver Factura
-            </button>
+            <div class="d-grid gap-2">
+              <button class="btn btn-primary" (click)="viewInvoice()">
+                👁 Ver Factura
+              </button>
+              <button class="btn btn-outline-secondary" (click)="downloadInvoice()">
+                ⬇ Descargar Factura
+              </button>
+            </div>
           </div>
 
           <!-- Upload Section -->

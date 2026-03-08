@@ -3,10 +3,11 @@
  */
 export interface InvoiceResponse {
   id: number;
-  fileName: string;
-  fileUrl: string;
-  fileSize: number;
-  contentType: string;
   orderId: number;
+  originalFileName: string;
+  contentType: string;
+  fileSizeBytes: number;
+  downloadUrl: string;
+  uploadedByEmail: string;
   uploadedAt: string;
 }

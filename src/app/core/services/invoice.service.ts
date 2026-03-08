@@ -37,9 +37,22 @@ export class InvoiceService {
   }
 
   /**
-   * Descarga una factura (abre en nueva pestaña)
+   * Visualiza una factura en una nueva pestaña (inline)
    */
-  downloadInvoice(fileUrl: string): void {
-    window.open(fileUrl, '_blank');
+  viewInvoice(downloadUrl: string): void {
+    if (downloadUrl) {
+      window.open(downloadUrl, '_blank');
+    }
+  }
+
+  /**
+   * Descarga una factura forzando la descarga del archivo
+   */
+  downloadInvoice(downloadUrl: string): void {
+    if (downloadUrl) {
+      // Agregar /download al final de la URL para forzar descarga
+      const forceDownloadUrl = downloadUrl + '/download';
+      window.open(forceDownloadUrl, '_blank');
+    }
   }
 }
