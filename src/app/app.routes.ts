@@ -1,6 +1,9 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
 import { operatorGuard } from './core/guards/operator.guard';
+// adminGuard disponible pero no usado en rutas actuales:
+// Las acciones de admin (aprobar/rechazar) están protegidas a nivel de componente
+// Si en el futuro se agregan rutas exclusivas de admin, usar: canActivate: [authGuard, adminGuard]
 import { LoginComponent } from './features/auth/login.component';
 import { DashboardComponent } from './features/dashboard/dashboard.component';
 import { OrderListComponent } from './features/orders/order-list/order-list.component';

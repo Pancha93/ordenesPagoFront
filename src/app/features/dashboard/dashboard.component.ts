@@ -85,10 +85,10 @@ export class DashboardComponent implements OnInit {
   }
 
   /**
-   * Obtiene el badge del rol
+   * Obtiene el badge del rol (clases Bootstrap)
    */
   getRoleBadgeClass(): string {
-    return this.currentUser?.role === UserRole.ADMIN ? 'badge-admin' : 'badge-operator';
+    return this.currentUser?.role === UserRole.ADMIN ? 'bg-danger' : 'bg-primary';
   }
 
   /**

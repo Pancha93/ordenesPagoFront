@@ -1,6 +1,7 @@
-<div class="order-list-container">
-  <div class="page-header">
-    <h2>Órdenes de Pago</h2>
+<div class="container-fluid py-4">
+  <!-- Page Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="h3 mb-0">Órdenes de Pago</h2>
     <button 
       *ngIf="authService.isOperator()" 
       class="btn btn-primary" 
@@ -10,158 +11,128 @@
     </button>
   </div>
 
-  <!-- Filtros -->
-  <div class="filters-card">
-    <h3>Filtros</h3>
-    <div class="filters-form">
-      <div class="form-group">
-        <label for="statusFilter">Estado</label>
-        <select id="statusFilter" [(ngModel)]="statusFilter" class="form-control">
-          <option value="">Todos</option>
-          <option [value]="OrderStatus.PENDING">Pendiente</option>
-          <option [value]="OrderStatus.APPROVED">Aprobada</option>
-          <option [value]="OrderStatus.REJECTED">Rechazada</option>
-        </select>
+  <!-- Filters Card -->
+  <div class="card mb-4 shadow-sm">
+    <div class="card-body">
+      <h5 class="card-title">Filtros</h5>
+      <div class="row g-3 align-items-end">
+        <div class="col-md-6">
+          <label for="statusFilter" class="form-label">Estado</label>
+          <select id="statusFilter" [(ngModel)]="statusFilter" class="form-select">
+            <option value="">Todos</option>
+            <option [value]="OrderStatus.PENDING">Pendiente</option>
+            <option [value]="OrderStatus.APPROVED">Aprobada</option>
+            <option [value]="OrderStatus.REJECTED">Rechazada</option>
+          </select>
+        </div>
+        <div class="col-md-6">
+          <button class="btn btn-primary me-2" (click)="applyFilters()">🔍 Buscar</button>
+          <button class="btn btn-secondary" (click)="clearFilters()">✖ Limpiar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div class="text-center py-5" *ngIf="loading">
+    <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+    <p class="mt-3 text-muted">Cargando órdenes...</p>
+  </div>
+
+  <!-- Orders Table Card -->
+  <div class="card shadow-sm" *ngIf="!loading">
+    <div class="card-body">
+      <p class="mb-3">Total de órdenes: <strong>{{ totalElements }}</strong></p>
+
+      <!-- Table -->
+      <div class="table-responsive" *ngIf="orders.length > 0">
+        <table class="table table-hover align-middle">
+          <thead class="table-light">
+            <tr>
+              <th scope="col" (click)="changeSort('id')" style="cursor: pointer;">
+                ID
+                <span *ngIf="sortBy === 'id'">{{ sortDirection === 'ASC' ? '↑' : '↓' }}</span>
+              </th>
+              <th scope="col">Descripción</th>
+              <th scope="col" (click)="changeSort('amount')" style="cursor: pointer;">
+                Monto
+                <span *ngIf="sortBy === 'amount'">{{ sortDirection === 'ASC' ? '↑' : '↓' }}</span>
+              </th>
+              <th scope="col" (click)="changeSort('status')" style="cursor: pointer;">
+                Estado
+                <span *ngIf="sortBy === 'status'">{{ sortDirection === 'ASC' ? '↑' : '↓' }}</span>
+              </th>
+              <th scope="col">Creado por</th>
+              <th scope="col" class="text-center">Factura</th>
+              <th scope="col" (click)="changeSort('createdAt')" style="cursor: pointer;">
+                Fecha
+                <span *ngIf="sortBy === 'createdAt'">{{ sortDirection === 'ASC' ? '↑' : '↓' }}</span>
+              </th>
+              <th scope="col">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let order of orders">
+              <td>{{ order.id }}</td>
+              <td>{{ order.description }}</td>
+              <td class="text-nowrap fw-semibold">{{ formatAmount(order.amount) }}</td>
+              <td>
+                <span class="badge rounded-pill" [ngClass]="getStatusClass(order.status)">
+                  {{ getStatusText(order.status) }}
+                </span>
+              </td>
+              <td>
+                <div class="small">
+                  <div class="fw-semibold">{{ order.createdByName }}</div>
+                  <div class="text-muted">{{ order.createdByEmail }}</div>
+                </div>
+              </td>
+              <td class="text-center">
+                <span class="badge" [class.bg-success]="order.hasInvoice" [class.bg-secondary]="!order.hasInvoice">
+                  {{ order.hasInvoice ? '✓ Sí' : '✗ No' }}
+                </span>
+              </td>
+              <td class="text-nowrap small">{{ formatDate(order.createdAt) }}</td>
+              <td>
+                <button 
+                  class="btn btn-sm btn-outline-primary" 
+                  [routerLink]="['/dashboard/orders', order.id]"
+                >
+                  👁 Ver
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
-      <div class="filter-actions">
-        <button class="btn btn-primary" (click)="applyFilters()">🔍 Buscar</button>
-        <button class="btn btn-secondary" (click)="clearFilters()">✖ Limpiar</button>
+      <!-- No Orders Message -->
+      <div class="text-center py-5 text-muted" *ngIf="orders.length === 0">
+        <p class="h5">📭 No se encontraron órdenes</p>
       </div>
-    </div>
-  </div>
 
-  <!-- Mensaje de error -->
-  <div class="alert alert-error" *ngIf="errorMessage">
-    {{ errorMessage }}
-  </div>
-
-  <!-- Loading -->
-  <div class="loading" *ngIf="loading">
-    <div class="spinner"></div>
-    <p>Cargando órdenes...</p>
-  </div>
-
-  <!-- Tabla de órdenes -->
-  <div class="orders-card" *ngIf="!loading">
-    <div class="orders-info">
-      <p>Total de órdenes: <strong>{{ totalElements }}</strong></p>
-    </div>
-
-    <div class="table-responsive" *ngIf="orders.length > 0">
-      <table class="orders-table">
-        <thead>
-          <tr>
-            <th (click)="changeSort('id')" class="sortable">
-              ID
-              <span class="sort-icon" *ngIf="sortBy === 'id'">
-                {{ sortDirection === 'ASC' ? '↑' : '↓' }}
-              </span>
-            </th>
-            <th>Descripción</th>
-            <th (click)="changeSort('amount')" class="sortable">
-              Monto
-              <span class="sort-icon" *ngIf="sortBy === 'amount'">
-                {{ sortDirection === 'ASC' ? '↑' : '↓' }}
-              </span>
-            </th>
-            <th (click)="changeSort('status')" class="sortable" >
-              Estado
-              <span class="sort-icon" *ngIf="sortBy === 'status'">
-                {{ sortDirection === 'ASC' ? '↑' : '↓' }}
-              </span>
-            </th>
-            <th>Creado por</th>
-            <th>Factura</th>
-            <th (click)="changeSort('createdAt')" class="sortable">
-              Fecha de Creación
-              <span class="sort-icon" *ngIf="sortBy === 'createdAt'">
-                {{ sortDirection === 'ASC' ? '↑' : '↓' }}
-              </span>
-            </th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let order of orders">
-            <td>{{ order.id }}</td>
-            <td class="description-cell">{{ order.description }}</td>
-            <td class="amount-cell">{{ formatAmount(order.amount) }}</td>
-            <td>
-              <span class="status-badge" [ngClass]="getStatusClass(order.status)">
-                {{ getStatusText(order.status) }}
-              </span>
-            </td>
-            <td>
-              <div class="user-cell">
-                <div class="user-name">{{ order.createdByName }}</div>
-                <div class="user-email">{{ order.createdByEmail }}</div>
-              </div>
-            </td>
-            <td class="text-center">
-              <span class="invoice-badge" [class.has-invoice]="order.hasInvoice">
-                {{ order.hasInvoice ? '✓ Sí' : '✗ No' }}
-              </span>
-            </td>
-            <td>{{ formatDate(order.createdAt) }}</td>
-            <td>
-              <button 
-                class="btn btn-sm btn-info" 
-                [routerLink]="['/dashboard/orders', order.id]"
-              >
-                👁 Ver
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- No hay órdenes -->
-    <div class="no-orders" *ngIf="orders.length === 0">
-      <p>📭 No se encontraron órdenes</p>
-    </div>
-
-    <!-- Paginación -->
-    <div class="pagination" *ngIf="totalPages > 1">
-      <button 
-        class="btn btn-page" 
-        [disabled]="currentPage === 0" 
-        (click)="goToPage(0)"
-      >
-        ⏮ Primera
-      </button>
-      <button 
-        class="btn btn-page" 
-        [disabled]="currentPage === 0" 
-        (click)="goToPage(currentPage - 1)"
-      >
-        ← Anterior
-      </button>
-      
-      <button 
-        *ngFor="let page of pages" 
-        class="btn btn-page"
-        [class.active]="page === currentPage"
-        (click)="goToPage(page)"
-      >
-        {{ page + 1 }}
-      </button>
-      
-      <button 
-        class="btn btn-page" 
-        [disabled]="currentPage === totalPages - 1" 
-        (click)="goToPage(currentPage + 1)"
-      >
-        Siguiente →
-      </button>
-      <button 
-        class="btn btn-page" 
-        [disabled]="currentPage === totalPages - 1" 
-        (click)="goToPage(totalPages - 1)"
-      >
-        Última ⏭
-      </button>
+      <!-- Pagination -->
+      <nav aria-label="Paginación de órdenes" *ngIf="totalPages > 1">
+        <ul class="pagination pagination-sm justify-content-center mb-0 mt-3">
+          <li class="page-item" [class.disabled]="currentPage === 0">
+            <a class="page-link" (click)="goToPage(0)" tabindex="-1">⏮ Primera</a>
+          </li>
+          <li class="page-item" [class.disabled]="currentPage === 0">
+            <a class="page-link" (click)="goToPage(currentPage - 1)">← Anterior</a>
+          </li>
+          <li class="page-item" *ngFor="let page of pages" [class.active]="page === currentPage">
+            <a class="page-link" (click)="goToPage(page)">{{ page + 1 }}</a>
+          </li>
+          <li class="page-item" [class.disabled]="currentPage === totalPages - 1">
+            <a class="page-link" (click)="goToPage(currentPage + 1)">Siguiente →</a>
+          </li>
+          <li class="page-item" [class.disabled]="currentPage === totalPages - 1">
+            <a class="page-link" (click)="goToPage(totalPages - 1)">Última ⏭</a>
+          </li>
+        </ul>
+      </nav>
     </div>
   </div>
 </div>

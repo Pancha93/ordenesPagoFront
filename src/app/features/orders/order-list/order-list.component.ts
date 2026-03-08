@@ -130,18 +130,18 @@ export class OrderListComponent implements OnInit {
   }
 
   /**
-   * Obtiene la clase CSS según el estado
+   * Obtiene la clase CSS Bootstrap según el estado
    */
   getStatusClass(status: OrderStatus): string {
     switch (status) {
       case OrderStatus.PENDING:
-        return 'status-pending';
+        return 'bg-warning text-dark';
       case OrderStatus.APPROVED:
-        return 'status-approved';
+        return 'bg-success';
       case OrderStatus.REJECTED:
-        return 'status-rejected';
+        return 'bg-danger';
       default:
-        return '';
+        return 'bg-secondary';
     }
   }
 

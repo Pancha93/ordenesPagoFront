@@ -260,18 +260,18 @@ export class OrderDetailComponent implements OnInit {
   }
 
   /**
-   * Obtiene la clase CSS según el estado
+   * Obtiene la clase CSS Bootstrap según el estado
    */
   getStatusClass(status: OrderStatus): string {
     switch (status) {
       case OrderStatus.PENDING:
-        return 'status-pending';
+        return 'bg-warning text-dark';
       case OrderStatus.APPROVED:
-        return 'status-approved';
+        return 'bg-success';
       case OrderStatus.REJECTED:
-        return 'status-rejected';
+        return 'bg-danger';
       default:
-        return '';
+        return 'bg-secondary';
     }
   }
 
@@ -333,9 +333,18 @@ export class OrderDetailComponent implements OnInit {
   }
 
   /**
-   * Verifica si se puede subir factura
+   * Verifica si se puede subir factura (solo OPERATOR)
    */
   canUploadInvoice(): boolean {
-    return !this.invoice && this.order?.status === OrderStatus.PENDING;
+    return this.authService.isOperator() && 
+           !this.invoice && 
+           this.order?.status === OrderStatus.PENDING;
+  }
+
+  /**
+   * Verifica si se puede ver/descargar factura
+   */
+  canViewInvoice(): boolean {
+    return !!this.invoice;
   }
 }

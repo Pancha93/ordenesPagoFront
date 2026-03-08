@@ -1,89 +1,102 @@
-<div class="create-order-container">
-  <div class="page-header">
-    <button class="btn-back" (click)="cancel()">
+<div class="container py-4" style="max-width: 800px;">
+  <!-- Page Header -->
+  <div class="mb-4">
+    <button class="btn btn-outline-secondary mb-3" (click)="cancel()">
       ← Volver
     </button>
-    <h2>Nueva Orden de Pago</h2>
+    <h2 class="h3">Nueva Orden de Pago</h2>
   </div>
 
-  <div class="order-form-card">
-    <form [formGroup]="orderForm" (ngSubmit)="onSubmit()">
-      <!-- Campo Descripción -->
-      <div class="form-group">
-        <label for="description">
-          Descripción <span class="required">*</span>
-        </label>
-        <textarea
-          id="description"
-          formControlName="description"
-          placeholder="Ingrese una descripción detallada de la orden"
-          rows="4"
-          [class.error]="hasError('description')"
-        ></textarea>
-        <div class="field-info">
-          <span class="error-message" *ngIf="hasError('description')">
-            {{ getErrorMessage('description') }}
-          </span>
-          <span class="char-count">
-            {{ orderForm.get('description')?.value?.length || 0 }} / 500
-          </span>
+  <!-- Order Form Card -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-body p-4">
+      <form [formGroup]="orderForm" (ngSubmit)="onSubmit()">
+        <!-- Description Field -->
+        <div class="mb-4">
+          <label for="description" class="form-label fw-semibold">
+            Descripción <span class="text-danger">*</span>
+          </label>
+          <textarea
+            id="description"
+            formControlName="description"
+            class="form-control"
+            [class.is-invalid]="hasError('description')"
+            placeholder="Ingrese una descripción detallada de la orden"
+            rows="4"
+            maxlength="500"
+          ></textarea>
+          <div class="d-flex justify-content-between align-items-start mt-1">
+            <div class="invalid-feedback d-block" *ngIf="hasError('description')">
+              {{ getErrorMessage('description') }}
+            </div>
+            <small class="text-muted ms-auto">
+              {{ orderForm.get('description')?.value?.length || 0 }} / 500
+            </small>
+          </div>
         </div>
-      </div>
 
-      <!-- Campo Monto -->
-      <div class="form-group">
-        <label for="amount">
-          Monto (COP) <span class="required">*</span>
-        </label>
-        <div class="input-with-icon">
-          <span class="currency-symbol">$</span>
-          <input
-            type="number"
-            id="amount"
-            formControlName="amount"
-            placeholder="0.00"
-            step="0.01"
-            min="0.01"
-            [class.error]="hasError('amount')"
-            (blur)="formatAmount()"
-          />
+        <!-- Amount Field -->
+        <div class="mb-4">
+          <label for="amount" class="form-label fw-semibold">
+            Monto (COP) <span class="text-danger">*</span>
+          </label>
+          <div class="input-group">
+            <span class="input-group-text">$</span>
+            <input
+              type="number"
+              id="amount"
+              formControlName="amount"
+              class="form-control"
+              [class.is-invalid]="hasError('amount')"
+              placeholder="0.00"
+              step="0.01"
+              min="0.01"
+              (blur)="formatAmount()"
+            />
+          </div>
+          <div class="invalid-feedback d-block" *ngIf="hasError('amount')">
+            {{ getErrorMessage('amount') }}
+          </div>
+          <small class="form-text text-muted">Ingrese el monto en pesos colombianos (COP)</small>
         </div>
-        <span class="error-message" *ngIf="hasError('amount')">
-          {{ getErrorMessage('amount') }}
-        </span>
-        <p class="field-hint">Ingrese el monto en pesos colombianos (COP)</p>
-      </div>
 
-      <!-- Nota informativa -->
-      <div class="info-box">
-        <p>
-          <strong>📌 Nota:</strong> Una vez creada la orden, podrá adjuntar la factura correspondiente
-          en la pantalla de detalle.
-        </p>
-      </div>
+        <!-- Info Alert -->
+        <div class="alert alert-info d-flex align-items-start" role="alert">
+          <strong class="me-2">📌</strong>
+          <div>
+            <strong>Nota:</strong> Una vez creada la orden, podrá adjuntar la factura correspondiente
+            en la pantalla de detalle.
+          </div>
+        </div>
 
-      <!-- Botones -->
-      <div class="form-actions">
-        <button type="button" class="btn btn-secondary" (click)="cancel()" [disabled]="loading">
-          Cancelar
-        </button>
-        <button type="submit" class="btn btn-primary" [disabled]="loading || orderForm.invalid">
-          <span *ngIf="!loading">✓ Crear Orden</span>
-          <span *ngIf="loading">Creando...</span>
-        </button>
-      </div>
-    </form>
+        <!-- Form Actions -->
+        <div class="d-flex gap-2">
+          <button type="button" class="btn btn-secondary" (click)="cancel()" [disabled]="loading">
+            Cancelar
+          </button>
+          <button type="submit" class="btn btn-primary" [disabled]="loading || orderForm.invalid">
+            <span *ngIf="!loading">✓ Crear Orden</span>
+            <span *ngIf="loading">
+              <span class="spinner-border spinner-border-sm me-2"></span>
+              Creando...
+            </span>
+          </button>
+        </div>
+      </form>
+    </div>
   </div>
 
-  <!-- Información adicional -->
-  <div class="help-card">
-    <h3>💡 Información</h3>
-    <ul>
-      <li>La descripción debe ser clara y detallada (mínimo 5 caracteres)</li>
-      <li>El monto debe ser un valor positivo mayor a 0</li>
-      <li>La orden se creará en estado "Pendiente"</li>
-      <li>Podrá adjuntar la factura después de crear la orden</li>
-      <li>Solo los administradores pueden aprobar o rechazar órdenes</li>
-    </ul>
+  <!-- Help Card -->
+  <div class="card border-primary">
+    <div class="card-body">
+      <h5 class="card-title">💡 Información</h5>
+      <ul class="mb-0">
+        <li>La descripción debe ser clara y detallada (mínimo 5 caracteres)</li>
+        <li>El monto debe ser un valor positivo mayor a 0</li>
+        <li>La orden se creará en estado "Pendiente"</li>
+        <li>Podrá adjuntar la factura después de crear la orden</li>
+        <li>Solo los administradores pueden aprobar o rechazar órdenes</li>
+      </ul>
+    </div>
   </div>
 </div>
