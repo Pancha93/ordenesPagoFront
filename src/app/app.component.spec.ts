@@ -14,16 +14,17 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have the 'front' title`, () => {
+  it('should have the app title', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('front');
+    expect(app.title).toEqual('Órdenes de Pago');
   });
 
-  it('should render title', () => {
+  it('should render app component', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, front');
+    // Verificar que el router-outlet existe
+    expect(compiled.querySelector('router-outlet')).toBeTruthy();
   });
 });
