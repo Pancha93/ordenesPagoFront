@@ -6,7 +6,7 @@ Esta documentación detalla todas las tecnologías, librerías y frameworks util
 
 ---
 
-## 🎯 Framework Principal
+##  Framework Principal
 
 ### Angular 18.2.0
 **Tipo:** Framework JavaScript/TypeScript para aplicaciones web  
@@ -28,7 +28,7 @@ Esta documentación detalla todas las tecnologías, librerías y frameworks util
 
 ---
 
-## 📦 Dependencias Core de Angular
+## Dependencias Core de Angular
 
 ### @angular/animations (^18.2.0)
 - Animaciones y transiciones en componentes
@@ -66,7 +66,7 @@ Esta documentación detalla todas las tecnologías, librerías y frameworks util
 
 ---
 
-## 🎨 UI/UX y Diseño
+## UI/UX y Diseño
 
 ### Bootstrap 5 (^5.3.3)
 **Tipo:** Framework CSS con componentes JavaScript  
@@ -161,7 +161,7 @@ Esta documentación detalla todas las tecnologías, librerías y frameworks util
 
 ---
 
-## 🔧 Herramientas de Desarrollo
+## Herramientas de Desarrollo
 
 ### TypeScript (~5.5.2)
 **Tipo:** Superset de JavaScript con tipado estático  
@@ -201,7 +201,7 @@ Esta documentación detalla todas las tecnologías, librerías y frameworks util
 
 ---
 
-## 🛠️ Build Tools
+## Build Tools
 
 ### Angular CLI (^18.2.11)
 **Tipo:** Herramienta de línea de comandos  
@@ -219,7 +219,7 @@ Esta documentación detalla todas las tecnologías, librerías y frameworks util
 
 ---
 
-## 🧪 Testing (Configurado pero no implementado)
+## Testing
 
 ### Jasmine (~5.2.0)
 - Framework de testing
@@ -231,9 +231,9 @@ Esta documentación detalla todas las tecnologías, librerías y frameworks util
 
 ---
 
-## 📋 Decisiones de Diseño - ¿Por qué Bootstrap?
+## Decisiones de Diseño - ¿Por qué Bootstrap?
 
-### ✅ Bootstrap 5 - ELEGIDO
+### Bootstrap 5 - ELEGIDO
 **Razones:**
 1. **Estándar de la industria:** Usado en millones de proyectos empresariales
 2. **Buenas prácticas reconocidas:** Código que cualquier desarrollador puede entender
@@ -245,36 +245,7 @@ Esta documentación detalla todas las tecnologías, librerías y frameworks util
 8. **Sin jQuery:** Bootstrap 5 es vanilla JavaScript
 9. **Accesibilidad:** Cumple con estándares WCAG
 
-### ❌ CSS Manual/SCSS Puro - DESCARTADO
-**Razones:**
-- No es estándar en proyectos empresariales modernos
-- Mayor tiempo de desarrollo
-- Difícil de mantener sin convenciones
-- No es bien visto en evaluaciones técnicas profesionales
-- Requiere inventar la rueda en cada componente
-
-### ❌ Angular Material - NO ELEGIDO
-**Razones:**
-- Material Design no es requisito del proyecto
-- Bootstrap es más ligero y flexible
-- Mayor curva de aprendizaje
-- Dependencias adicionales de Angular CDK
-
-### ❌ Tailwind CSS - NO ELEGIDO
-**Razones:**
-- Utility-first approach puede ser verboso en templates
-- Bootstrap tiene componentes más completos
-- Menor adopción en empresas tradicionales
-
-### ❌ PrimeNG / NgBootstrap - NO ELEGIDO
-**Razones:**
-- Bootstrap vanilla es suficiente para este proyecto
-- Menor overhead sin wrapper adicional
-- Mayor flexibilidad
-
----
-
-## 📊 Estructura de Estilos
+## Estructura de Estilos
 
 ### Enfoque Utilizado: **Bootstrap 5 + SCSS Mínimo**
 
@@ -301,7 +272,7 @@ styles.scss             → Estilos globales mínimos
 
 ---
 
-## 🎨 Sistema de Diseño
+## Sistema de Diseño
 
 ### Componentes Bootstrap Utilizados
 
@@ -335,7 +306,7 @@ styles.scss             → Estilos globales mínimos
 
 ---
 
-## 📦 package.json - Dependencias Completas
+## package.json - Dependencias Completas
 
 ### Dependencies (Producción)
 ```json
@@ -376,7 +347,7 @@ styles.scss             → Estilos globales mínimos
 
 ---
 
-## 🔒 Seguridad
+## Seguridad
 
 ### JWT (JSON Web Tokens)
 **Implementación:** Manual con localStorage  
@@ -392,7 +363,7 @@ styles.scss             → Estilos globales mínimos
 
 ---
 
-## 📱 Responsive Design
+## Responsive Design
 
 ### Enfoque: **Bootstrap Grid System**
 
@@ -419,7 +390,7 @@ styles.scss             → Estilos globales mínimos
 
 ---
 
-## 🚀 Performance y Optimización
+## Performance y Optimización
 
 ### Técnicas Aplicadas:
 1. **Standalone Components:** Menor bundle size
@@ -432,7 +403,7 @@ styles.scss             → Estilos globales mínimos
 
 ---
 
-## 📝 Conclusión
+## Conclusión
 
 ### Justificación del Stack Tecnológico
 
@@ -466,45 +437,5 @@ styles.scss             → Estilos globales mínimos
   - Angular: ~150KB gzipped
   - Bootstrap: ~25KB CSS + ~15KB JS gzipped
   - SweetAlert2: ~30KB gzipped
-  - **Total: ~220KB gzipped** ✅
+  - **Total: ~220KB gzipped** 
 - **Performance:** Óptima para SPAs empresariales
-
----
-
-## 🔄 Replicación en Otro PC
-
-Para replicar este proyecto en otro equipo:
-
-```bash
-# 1. Clonar el repositorio
-git clone <repo-url>
-
-# 2. Navegar al frontend
-cd Frontend/ordenesPagoFront
-
-# 3. Instalar todas las dependencias (están en package.json)
-npm install
-
-# 4. Iniciar el servidor de desarrollo
-npm start
-```
-
-**Todas las librerías están guardadas en `package.json`** con la flag `--save`, por lo que `npm install` instalará automáticamente todo lo necesario, incluyendo Bootstrap y sus dependencias.
-
----
-
-## 📚 Referencias
-
-- [Angular Documentation](https://angular.dev)
-- [Bootstrap 5 Documentation](https://getbootstrap.com/docs/5.3/)
-- [SweetAlert2 Documentation](https://sweetalert2.github.io)
-- [RxJS Documentation](https://rxjs.dev)
-- [TypeScript Documentation](https://www.typescriptlang.org)
-- [Popper.js Documentation](https://popper.js.org)
-
----
-
-**Fecha de documentación:** Marzo 2026  
-**Versión del proyecto:** 1.0.0  
-**Stack:** Angular 18 + Bootstrap 5 + SweetAlert2  
-**Autor:** Desarrollador Fullstack

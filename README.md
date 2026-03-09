@@ -2,7 +2,7 @@
 
 Frontend desarrollado en Angular 18 para el sistema de gestión de órdenes de pago.
 
-## 🚀 Tecnologías
+## Tecnologías
 
 - Angular 18
 - TypeScript
@@ -11,13 +11,13 @@ Frontend desarrollado en Angular 18 para el sistema de gestión de órdenes de p
 - Angular Router
 - Standalone Components
 
-## 📋 Requisitos Previos
+## Requisitos Previos
 
 - Node.js (v18 o superior)
 - npm (v9 o superior)
 - Angular CLI (v18 o superior)
 
-## 🔧 Instalación
+## Instalación
 
 1. Navegar a la carpeta del frontend:
 ```bash
@@ -33,7 +33,7 @@ npm install
    - Editar el archivo `src/app/core/config/environment.ts`
    - Modificar `apiUrl` si el backend no está en `http://localhost:8080/api`
 
-## ▶️ Ejecución
+## Ejecución
 
 ### Modo Desarrollo
 ```bash
@@ -53,7 +53,7 @@ npm run build
 
 Los archivos compilados se generarán en la carpeta `dist/`
 
-## 👥 Usuarios de Prueba
+## Usuarios de Prueba
 
 ### Administrador
 - **Email:** admin@vortexbird.com
@@ -65,7 +65,7 @@ Los archivos compilados se generarán en la carpeta `dist/`
 - **Password:** password123
 - **Permisos:** Crear órdenes, subir facturas, ver órdenes propias
 
-## 📁 Estructura del Proyecto
+## Estructura del Proyecto
 
 ```
 src/app/
@@ -89,7 +89,7 @@ src/app/
 └── app.routes.ts             # Definición de rutas
 ```
 
-## 🔐 Autenticación y Seguridad
+## Autenticación y Seguridad
 
 - **JWT:** Token almacenado en localStorage
 - **Interceptor HTTP:** Agrega automáticamente el token a las peticiones
@@ -98,7 +98,7 @@ src/app/
   - `adminGuard`: Protege rutas solo para administradores
   - `operatorGuard`: Protege rutas solo para operadores
 
-## 📱 Funcionalidades Implementadas
+## Funcionalidades Implementadas
 
 ### Login
 - Formulario de autenticación con validaciones
@@ -134,7 +134,7 @@ src/app/
 - Modal para ingresar motivo de rechazo
 - Actualización inmediata del estado
 
-## 🎨 Diseño
+## Diseño
 
 - Interfaz moderna con gradientes y sombras
 - Responsive design (tablet y móvil)
@@ -144,7 +144,7 @@ src/app/
   - Rechazada: Rojo
 - Animaciones suaves en botones y tarjetas
 
-## 🔄 Integración con Backend
+## Integración con Backend
 
 El frontend consume los siguientes endpoints:
 
@@ -157,14 +157,14 @@ El frontend consume los siguientes endpoints:
 - `POST /api/invoices/upload/{orderId}` - Subir factura
 - `GET /api/invoices/order/{orderId}` - Obtener factura
 
-## ⚠️ Notas Importantes
+## Notas Importantes
 
 1. **CORS:** Asegurar que el backend permita peticiones desde `http://localhost:4200`
 2. **JWT:** El token se almacena en localStorage (considerar seguridad en producción)
 3. **Sesión:** No hay renovación automática de token, la sesión expira según configuración del backend
 4. **Archivos:** Las facturas se abren en nueva pestaña para visualización/descarga
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Error de conexión al backend
 - Verificar que el backend esté ejecutándose
@@ -180,7 +180,7 @@ El frontend consume los siguientes endpoints:
 - Tamaño máximo: 5MB
 - Verificar permisos de escritura en el backend
 
-## 📝 Decisiones Técnicas
+## Decisiones Técnicas
 
 1. **Standalone Components:** Se optó por usar standalone components en lugar de NgModules para simplificar la estructura y aprovechar las últimas features de Angular 18.
 
@@ -191,20 +191,3 @@ El frontend consume los siguientes endpoints:
 4. **Reactive Forms:** Se utilizó Reactive Forms para mayor control y validación de formularios.
 
 5. **Separación de Responsabilidades:** Estructura clara con carpetas `core` (servicios compartidos) y `features` (componentes por funcionalidad).
-
-## 🚧 Funcionalidades Pendientes / Mejoras Futuras
-
-- [ ] Renovación automática de token JWT
-- [ ] Caché de peticiones HTTP
-- [ ] Lazy loading de módulos
-- [ ] Tests unitarios y e2e
-- [ ] Internacionalización (i18n)
-- [ ] Modo oscuro
-- [ ] Notificaciones push
-- [ ] Exportación de órdenes a Excel/PDF
-- [ ] Gráficos y estadísticas
-- [ ] Búsqueda avanzada con más filtros
-
-## 📞 Soporte
-
-Para cualquier duda o problema, contactar al equipo de desarrollo.
